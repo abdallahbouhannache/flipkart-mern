@@ -1,0 +1,27 @@
+
+here i created the mongo root user 
+
+->
+db.createUser(
+  {
+    user: "root",
+    pwd: "root123",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
+  }
+)
+
+plus+ this user 
+
+->
+db.createUser(
+  {
+    user: "myUserAdmin",
+    pwd: "abc123",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
+  }
+)
+
+
+here created the database:
+
+->  use ecomerce

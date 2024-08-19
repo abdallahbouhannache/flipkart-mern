@@ -26,9 +26,10 @@ const Register = () => {
         gender: "",
         password: "",
         cpassword: "",
+        role:"admin"
     });
 
-    const { name, email, gender, password, cpassword } = user;
+    const { name, email, gender, password, cpassword,role } = user;
 
     const [avatar, setAvatar] = useState();
     const [avatarPreview, setAvatarPreview] = useState("preview.png");
@@ -54,6 +55,7 @@ const Register = () => {
         formData.set("gender", gender);
         formData.set("password", password);
         formData.set("avatar", avatar);
+        formData.set("role", role);
 
         dispatch(registerUser(formData));
     }
@@ -172,6 +174,16 @@ const Register = () => {
                                         onChange={handleDataChange}
                                         required
                                     />
+                                    <TextField
+                                        fullWidth
+                                        id="role"
+                                        label="Role"
+                                        name="role"
+                                        value={role}
+                                        required
+                                        sx={{ display: 'none' }}
+                                        // onChange={handleDataChange}
+                                    />
                                 </div>
                                 {/* <!-- input container column --> */}
 
@@ -192,10 +204,11 @@ const Register = () => {
                                         Choose File
                                     </label>
                                 </div>
+                            
                                 <button type="submit" className="text-white py-3 w-full bg-primary-orange shadow hover:shadow-lg rounded-sm font-medium">Signup</button>
                                 <Link to="/login" className="hover:bg-gray-50 text-primary-blue text-center py-3 w-full shadow border rounded-sm font-medium">Existing User? Log in</Link>
                             </div>
-
+                            
                         </form>
                         {/* <!-- personal info procedure container --> */}
 

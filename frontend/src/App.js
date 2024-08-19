@@ -77,7 +77,7 @@ function App() {
     if (e.ctrlKey && e.shiftKey && e.keyCode === 73) e.preventDefault();
     if (e.ctrlKey && e.shiftKey && e.keyCode === 74) e.preventDefault();
   });
-  
+
   return (
     <>
       <Header />
@@ -171,7 +171,7 @@ function App() {
               <MainData />
             </Dashboard>
           </ProtectedRoute>
-        } ></Route>
+        } />
 
         <Route path="/admin/orders" element={
           <ProtectedRoute isAdmin={true}>
@@ -179,7 +179,7 @@ function App() {
               <OrderTable />
             </Dashboard>
           </ProtectedRoute>
-        } ></Route>
+        }  ></Route>
 
         <Route path="/admin/order/:id" element={
           <ProtectedRoute isAdmin={true}>

@@ -9,19 +9,29 @@ const cloudinary = require('cloudinary');
 // Register User
 exports.registerUser = asyncErrorHandler(async (req, res, next) => {
 
-    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
-        folder: "avatars",
-        width: 150,
-        crop: "scale",
-    });
+    
 
-    const { name, email, gender, password } = req.body;
+    const myCloud = await cloudinary.uploader
+        .upload(
+            req.body.avatar, {
+            folder: "avatars",
+            width: 150,
+            crop: "scale",
+        }
+        )
+        .catch((error) => {
+            console.log(error);
+        });
 
+
+    const { name, email, gender, password,role } = req.body;
+    
     const user = await User.create({
-        name, 
+        name,
         email,
         gender,
         password,
+        role,
         avatar: {
             public_id: myCloud.public_id,
             url: myCloud.secure_url,
@@ -35,19 +45,19 @@ exports.registerUser = asyncErrorHandler(async (req, res, next) => {
 exports.loginUser = asyncErrorHandler(async (req, res, next) => {
     const { email, password } = req.body;
 
-    if(!email || !password) {
+    if (!email || !password) {
         return next(new ErrorHandler("Please Enter Email And Password", 400));
     }
 
-    const user = await User.findOne({ email}).select("+password");
+    const user = await User.findOne({ email }).select("+password");
 
-    if(!user) {
+    if (!user) {
         return next(new ErrorHandler("Invalid Email or Password", 401));
     }
 
     const isPasswordMatched = await user.comparePassword(password);
 
-    if(!isPasswordMatched) {
+    if (!isPasswordMatched) {
         return next(new ErrorHandler("Invalid Email or Password", 401));
     }
 
@@ -69,7 +79,7 @@ exports.logoutUser = asyncErrorHandler(async (req, res, next) => {
 
 // Get User Details
 exports.getUserDetails = asyncErrorHandler(async (req, res, next) => {
-    
+
     const user = await User.findById(req.user.id);
 
     res.status(200).json({
@@ -80,10 +90,10 @@ exports.getUserDetails = asyncErrorHandler(async (req, res, next) => {
 
 // Forgot Password
 exports.forgotPassword = asyncErrorHandler(async (req, res, next) => {
-    
-    const user = await User.findOne({email: req.body.email});
 
-    if(!user) {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
         return next(new ErrorHandler("User Not Found", 404));
     }
 
@@ -125,12 +135,12 @@ exports.resetPassword = asyncErrorHandler(async (req, res, next) => {
     // create hash token
     const resetPasswordToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
 
-    const user = await User.findOne({ 
+    const user = await User.findOne({
         resetPasswordToken,
         resetPasswordExpire: { $gt: Date.now() }
     });
 
-    if(!user) {
+    if (!user) {
         return next(new ErrorHandler("Invalid reset password token", 404));
     }
 
@@ -149,7 +159,7 @@ exports.updatePassword = asyncErrorHandler(async (req, res, next) => {
 
     const isPasswordMatched = await user.comparePassword(req.body.oldPassword);
 
-    if(!isPasswordMatched) {
+    if (!isPasswordMatched) {
         return next(new ErrorHandler("Old Password is Invalid", 400));
     }
 
@@ -166,7 +176,7 @@ exports.updateProfile = asyncErrorHandler(async (req, res, next) => {
         email: req.body.email,
     }
 
-    if(req.body.avatar !== "") {
+    if (req.body.avatar !== "") {
         const user = await User.findById(req.user.id);
 
         const imageId = user.avatar.public_id;
@@ -214,7 +224,7 @@ exports.getSingleUser = asyncErrorHandler(async (req, res, next) => {
 
     const user = await User.findById(req.params.id);
 
-    if(!user) {
+    if (!user) {
         return next(new ErrorHandler(`User doesn't exist with id: ${req.params.id}`, 404));
     }
 
@@ -250,7 +260,7 @@ exports.deleteUser = asyncErrorHandler(async (req, res, next) => {
 
     const user = await User.findById(req.params.id);
 
-    if(!user) {
+    if (!user) {
         return next(new ErrorHandler(`User doesn't exist with id: ${req.params.id}`, 404));
     }
 

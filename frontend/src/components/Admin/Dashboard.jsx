@@ -13,11 +13,13 @@ const Dashboard = ({ activeTab, children }) => {
         }
     }, [])
 
+    
     return (
         <>
             <main className="flex min-h-screen mt-14 sm:min-w-full">
 
                 {!onMobile && <Sidebar activeTab={activeTab} />}
+
                 {toggleSidebar && <Sidebar activeTab={activeTab} setToggleSidebar={setToggleSidebar}/>}
 
                 <div className="w-full sm:w-4/5 sm:ml-72 min-h-screen">
